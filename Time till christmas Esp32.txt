@@ -72,11 +72,11 @@ void loop()
 
 void displayDaysTillChristmas()
 {
-  // Calculate the days remaining until Christmas (assuming Christmas is on December 25)
+  // Calculate the days remaining until Christmas (assuming Christmas is on December 24th)
   tmElements_t christmasDate;
-  christmasDate.Year = 2023 - 1970; // Correct the year value
+  christmasDate.Year = year() - 1970; // Correct the year value
   christmasDate.Month = 12;
-  christmasDate.Day = 25;
+  christmasDate.Day = 25; //The 25 is under a day so it will display 00 on the 24th meaning its the date +1 day  
   christmasDate.Hour = 0;
   christmasDate.Minute = 0;
   christmasDate.Second = 0;
@@ -84,6 +84,13 @@ void displayDaysTillChristmas()
   time_t christmasTime = makeTime(christmasDate);
   time_t currentTime = now();
   int daysRemaining = (christmasTime - currentTime) / SECS_PER_DAY;
+
+  // If Christmas has already passed this year, increment the year
+  if (daysRemaining < 0) {
+    christmasDate.Year++;
+    christmasTime = makeTime(christmasDate);
+    daysRemaining = (christmasTime - currentTime) / SECS_PER_DAY;
+  }
 
   // For debugging, print days remaining to the Serial Monitor
   Serial.print("Days till Christmas: ");
